@@ -8,11 +8,12 @@ socket.on('connect', function ()  {                 //socket.on('connect', () =>
         text: 'This is Peter.'
     })
 */
+/*
     socket.emit('createMessage', {
         from: 'Peter',
         text:'Testing Chat App'
     });
-
+*/
     
 });
 

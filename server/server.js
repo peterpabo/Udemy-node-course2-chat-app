@@ -31,15 +31,22 @@ io.on('connection', (socket) => {
         console.log('createEmail', newEmail);
     });
     */
-   
+
+    /* 
     socket.emit('newMessage', {
         from: 'Peter',
         text: "What's going on",
         createdAt: 123
     });
-   
+    */ 
+
     socket.on('createMessage', (message) => {
         console.log('createMessage', message);
+        io.emit('newMessage', {                         //for all users, the server 'll send to all users connected to the server
+            from: message.from,
+            text: message.text,
+            createdAt: new Date().getTime()
+        })
     });
 
     socket.on('disconnect', () => {
