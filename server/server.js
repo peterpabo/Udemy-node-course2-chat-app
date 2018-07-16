@@ -39,14 +39,39 @@ io.on('connection', (socket) => {
         createdAt: 123
     });
     */ 
+    //socket.emit from Admin text Welcome to the chat app
+    socket.emit('newMessage', {
+        from:'Admin',
+        text:'Welcome to the chat app.'
+    });
+
+    //socket.broadcast.emit from Admin text New user joined
+    socket.broadcast.emit('newMessage', {
+        from:'Admin',
+        text: 'New user joined',
+        createdAt: new Date().getTime()
+    }) ;
+    
 
     socket.on('createMessage', (message) => {
         console.log('createMessage', message);
+
+
+
+
         io.emit('newMessage', {                         //for all users, the server 'll send to all users connected to the server
             from: message.from,
             text: message.text,
             createdAt: new Date().getTime()
-        })
+        });
+
+/*
+        socket.broadcast.emit('newMessage', {
+            from: message.from,
+            text: message.text,
+            createdAt: new Date().getTime()
+        });
+*/
     });
 
     socket.on('disconnect', () => {
