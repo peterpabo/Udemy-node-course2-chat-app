@@ -27,4 +27,25 @@ socket.on('newEmail', function (email) {
 */
 socket.on('newMessage', function (message) {
     console.log('New Message', message);
+    var li = jQuery('<li></li>');
+    li.text(`${message.from}: ${message.text}`);
+    jQuery('#messages').append(li);
+});
+
+socket.emit('createMessage', {
+    from: 'Frank',
+    text: 'Hi'
+}, function(data) {
+    console.log('got it!', data);                   //data => ./server/server.js    => callback('This is from the server');
+});
+
+jQuery('#message-form').on('submit', function(e){
+    e.preventDefault();                             //override default behavior          http://localhost:3000/?message=test     =>      http://localhost:3000
+
+    socket.emit('createMessage', {
+        from:   'User',
+        text:   jQuery('[name=message]').val()      //select inputText from index.html
+    }, function() {
+
+    });
 });
