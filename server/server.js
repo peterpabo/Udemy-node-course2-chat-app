@@ -83,22 +83,22 @@ io.on('connection', (socket) => {
     
 
     socket.on('createMessage', (message, callback) => {
-        console.log('createMessage', message);
+        var user = users.getUser(socket.id);
 
+        if (user && isRealString(message.text)){
+            io.to(user.room).emit('newMessage', generateMessage(user.name, message.text));//to send message to ALL users connected to the server.
+        }
+        callback();                                     //callback('This is from the server');              //acknowledgement function will still get called, but we don't actually need, we just need to know when the server responded.
 
 
 /*
+        console.log('createMessage', message);
         io.emit('newMessage', {                         //for all users, the server 'll send to all users connected to the server
             from: message.from,
             text: message.text,
             createdAt: new Date().getTime()
         });
 */
-        io.emit('newMessage', generateMessage(message.from, message.text));//to send message to ALL users connected to the server.
-        callback();                                     //callback('This is from the server');              //acknowledgement function will still get called, but we don't actually need, we just need to know when the server responded.
-
-
-
 /*
         socket.broadcast.emit('newMessage', {
             from: message.from,
@@ -111,7 +111,11 @@ io.on('connection', (socket) => {
     
 
     socket.on('createLocationMessage', (coords) => {
-        io.emit('newLocationMessage', generateLocationMessage('Admin', coords.latitude, coords.longitude))
+        var user = users.getUser(socket.id);
+
+        if (user) {
+            io.to(user.room).emit('newLocationMessage', generateLocationMessage(user.name, coords.latitude, coords.longitude));
+        }
     });
 
     socket.on('disconnect', () => {
